@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, ScrollView, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import updateUser from '../Controllers/UpdateUserController';
+import deleteCustomer from '../Controllers/DeleteCustomerController'; // יבוא הפונקציה למחיקה
 
 const UserManagementScreen = ({ navigation }) => {
     const [userDetails, setUserDetails] = useState({
@@ -81,6 +82,36 @@ const UserManagementScreen = ({ navigation }) => {
         }
     };
 
+    const handleDelete = async () => {
+        try {
+            // הצגת התראה לאישור המחיקה
+            Alert.alert(
+                'Confirm Delete',
+                'Are you sure you want to delete this user?',
+                [
+                    {
+                        text: 'Cancel',
+                        style: 'cancel',
+                    },
+                    {
+                        text: 'Delete',
+                        onPress: async () => {
+                            // קריאה לפונקציה למחיקת הלקוח
+                            await deleteCustomer(userDetails.customerId);
+                            await AsyncStorage.removeItem('user'); // מחיקת פרטי המשתמש מהזיכרון המקומי
+                            Alert.alert('Success', 'User deleted successfully');
+                            navigation.navigate('Login'); // חזרה לדף ההתחברות
+                        },
+                        style: 'destructive',
+                    },
+                ]
+            );
+        } catch (error) {
+            Alert.alert('Error', 'Failed to delete user');
+            console.error('Error deleting user:', error);
+        }
+    };
+
     return (
         <ScrollView style={styles.container}>
             <View>
@@ -129,6 +160,7 @@ const UserManagementScreen = ({ navigation }) => {
                     onChangeText={(text) => setUserDetails({ ...userDetails, drivingLicense: text })}
                 />
                 <Button title="Save" onPress={handleSave} />
+                <Button title="Delete User" color="red" onPress={handleDelete} />
             </View>
         </ScrollView>
     );

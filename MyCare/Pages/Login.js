@@ -4,10 +4,19 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import login from '../Controllers/LoginController'; 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function Login({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    useFocusEffect(
+        React.useCallback(() => {
+            // לאפס את השדות של האימייל והסיסמה
+            setEmail('');
+            setPassword('');
+        }, [])
+    );
 
     const handleLogin = async () => {
         if (!email || !password) {
