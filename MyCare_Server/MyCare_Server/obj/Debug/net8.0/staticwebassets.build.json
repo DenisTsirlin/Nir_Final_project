@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "evqSamziHmCFZHjW2maDwKMi67IQaNJj0nkSBfUSviE=",
+  "Source": "MyCare_Server",
+  "BasePath": "_content/MyCare_Server",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

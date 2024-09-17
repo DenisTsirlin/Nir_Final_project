@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\MyCare_Server.props" />
+</Project>

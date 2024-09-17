@@ -1,0 +1,6 @@
+@MyCare_Server_HostAddress = http://localhost:5206
+
+GET {{MyCare_Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
