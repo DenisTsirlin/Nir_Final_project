@@ -17,34 +17,50 @@ const HomePage = ({ navigation }) => {
                     const parsedUser = JSON.parse(userData);
                     console.log('Fetched user data:', parsedUser);
                     setUser(parsedUser);
+                    return parsedUser; // return parsedUser so it can be used in fetchCar
                 }
             } catch (error) {
                 console.error('Error fetching user data:', error);
             }
+            return null; // return null if no user data is found
         };
-
-        const fetchCar = async () => {
+    
+        const fetchCar = async (parsedUser) => {
             try {
                 const carData = await AsyncStorage.getItem('car');
                 if (carData) {
                     const parsedCar = JSON.parse(carData);
                     console.log('Fetched car data:', parsedCar);
-                    setCar(parsedCar);
+                    
+                    // Check if the car belongs to the fetched user
+                    if (parsedUser && parsedCar && String(parsedUser.id) === parsedCar.customerId) {
+                        console.log('Car belongs to this user');
+                        setCar(parsedCar);  // Save the car if it belongs to the user
+                    } else {
+                        console.log('Car does not belong to this user');
+                        setCar(null);  // Clear the car data if it doesn't belong to the user
+                    }
                 }
             } catch (error) {
                 console.error('Error fetching car data:', error);
             }
         };
-
-        fetchUser();
-        fetchCar();
-
+    
+        // Fetch user and car data initially
+        const init = async () => {
+            const user = await fetchUser();
+            if (user) {
+                fetchCar(user);  // Only fetch car if user data is available
+            }
+        };
+    
+        init();
+    
         // Add listener to fetch user data when navigating back to this screen
         const unsubscribe = navigation.addListener('focus', () => {
-            fetchUser();
-            fetchCar();
+            init();
         });
-
+    
         // Cleanup the listener on component unmount
         return unsubscribe;
     }, [navigation]);
